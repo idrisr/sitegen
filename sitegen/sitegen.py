@@ -5,7 +5,6 @@ from tzlocal import get_localzone
 import os
 import re
 
-DIR = Path.home() / "idrisr.github.io/"
 
 def get_files(path, extension): return list(path.glob(f"*.{extension}"))
 
@@ -27,6 +26,8 @@ class Folder:
     def __str__(self): return f'{self.path}\n{self.notebooks}'
     def __repr__(self): return f"{self._filenames}"
     def __contains__(self, element): return element in self.filenames
+    def __sub__(self, other):
+        return self.filenames - other.filenames
 
 
 class Notebooks(Folder):
@@ -34,9 +35,8 @@ class Notebooks(Folder):
 
     @property
     def notebooks(self): return self.files
-    def update_names(self): [rename_notebook(_) 
-            for _ in self.notebooks 
-            if not is_valid_name(_)]
+    def update_names(self): 
+        [rename_notebook(_) for _ in self.notebooks if not is_valid_name(_)] 
 
 
 class Posts(Folder):

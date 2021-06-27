@@ -39,8 +39,13 @@ def convert_notebook(notebook):
         fw.write(output, resources, notebook_name=notebook.stem)
         (Path(tmpdirname) / f'{notebook.stem}.md').rename(dest)
 
-    #  jupyter nbconvert --config mycfg.py --to markdown  99-sample-notebook.ipynb
+
+def main():
+    DIR = Path.home() / "idrisr.github.io"
+    nbs = Notebooks(DIR / "_jupyter")
+    posts = Posts(DIR / "_posts")
+    [convert_notebook(_) for _ in nbs - posts]
+
 
 if __name__ == '__main__':
-    nb = Path.home() / 'idrisr.github.io/_jupyter/2021-06-26-kaggle-api.ipynb'
-    convert_notebook(nb)
+    main()
