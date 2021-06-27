@@ -17,15 +17,16 @@ class Folder:
 
     @property
     def files(self): return get_files(self.path, self.extension)
+    @property
+    def filenames(self): return set([_.stem for _ in self.files])
 
     @property
     def all_valid(self): 
         """ check all files have valid names """
         return all([is_valid_name(_) for _ in self.files])
     def __str__(self): return f'{self.path}\n{self.notebooks}'
-
-    def __contains__(self, element):
-        return element in set([_.stem for _ in self.files])
+    def __repr__(self): return f"{self._filenames}"
+    def __contains__(self, element): return element in self.filenames
 
 
 class Notebooks(Folder):

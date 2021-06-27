@@ -51,3 +51,7 @@ def test_nbs_contain(filesys_setup, notebooks):
     """ test __contains__ for Notebook """
     assert "2021-03-04-something-great"  in notebooks
 
+def test_nbs_post_overlap(filesys_setup, notebooks, posts):
+    """ test whats in noteboook and not in posts """
+    diff = notebooks.filenames - posts.filenames
+    assert len(diff) == 1

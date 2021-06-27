@@ -12,37 +12,32 @@ import tempfile
 
 class Config:
     @staticmethod
-    def exporter():
+    def config():
         c = get_config()
         c.TemplateExporter.template_file = "my.tpl"
         c.MarkdownExporter.preprocessors = [YAMLFrontMatterPreProcessor, HideCell]
         c.ExtractOutputPreprocessor.output_filename_template = '{unique_key}_{cell_index}_{index}{extension}'
         c.MarkdownExporter.enabled = True
-        #  c.FilesWriter.build_directory = "moveme"
         c.Application.log_level = 0
         c.TemplateExporter.filters = {'jekyllify': jekyllify}
         return c
 
-    @staticmethod
-    def file_writer():
-        return get_config()
 
-
-def convert_notebook(notebook: Path):
-    """ converts notebook into markdown. notebook should already have valid
-    jekyll name 
+def convert_notebook(notebook):
+    """ converts notebook into markdown with custom preprocessors and filters. 
+        notebook should already have valid jekyll name 
     """
 
-    exporter = MarkdownExporter(config=Config.exporter())
+    dest = notebook.parent.parent / "_posts"/ f'{notebook.stem}.md'
+    exporter = MarkdownExporter(config=Config.config())
     (output, resources) = exporter.from_filename(filename=notebook)
 
-    fw = FilesWriter(config=get_config())
     with tempfile.TemporaryDirectory() as tmpdirname:
-        c = Config.file_writer()
-        #  c.FilesWriter.build_directory = tmpdirname
+        c = Config.config()
+        c.FilesWriter.build_directory = tmpdirname
+        fw = FilesWriter(config=c)
         fw.write(output, resources, notebook_name=notebook.stem)
-        print(list(Path(tmpdirname).glob("*")))
-        import ipdb; ipdb.set_trace()
+        (Path(tmpdirname) / f'{notebook.stem}.md').rename(dest)
 
     #  jupyter nbconvert --config mycfg.py --to markdown  99-sample-notebook.ipynb
 
