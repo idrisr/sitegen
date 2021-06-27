@@ -13,8 +13,11 @@ def filesys_setup():
     with tempfile.TemporaryDirectory() as tmpdirname:
         path = Path(tmpdirname)
 
-        nbs = ["1978-99-11", "2021-03-04-something-great", "2013-99-01-first-of-never"]
-        mds = ["2021-03-04-something-great", "2013-99-01-first-of-never"]
+        nbs = ["1978-99-11", 
+                "2021-03-04-something-great", 
+                "2013-99-01-first-of-never"]
+        mds = ["2021-03-04-something-great", 
+               "2013-99-01-first-of-never"]
 
         [make_tmp_file(path/"_jupyter", f"{_}.ipynb") for _ in nbs]
         [make_tmp_file(path/"_posts", f"{_}.md") for _ in mds]
@@ -41,11 +44,8 @@ def test_notebook_rename(filesys_setup, notebooks):
     notebooks.update_names()
     assert notebooks.all_valid
 
-def test_posts_read(filesys_setup, posts):
-    assert len(posts) == 2
-
-def test_posts_invalid(filesys_setup, posts):
-    assert not posts.all_valid
+def test_posts_read(filesys_setup, posts): assert len(posts) == 2
+def test_posts_invalid(filesys_setup, posts): assert not posts.all_valid
 
 def test_nbs_contain(filesys_setup, notebooks):
     """ test __contains__ for Notebook """
@@ -53,5 +53,5 @@ def test_nbs_contain(filesys_setup, notebooks):
 
 def test_nbs_post_overlap(filesys_setup, notebooks, posts):
     """ test whats in noteboook and not in posts """
-    diff = notebooks.filenames - posts.filenames
+    diff = notebooks - posts
     assert len(diff) == 1

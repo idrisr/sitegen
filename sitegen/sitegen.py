@@ -13,6 +13,11 @@ class Folder:
     def __init__(self, path): self.path = path
     def __len__(self): return len(self.files)
     def __iter__(self): return iter(self.files)
+    def __getitem__(self, elem):
+        files = self.files
+        l = [_.stem for _ in files]
+        index = l.index(elem)
+        return self.files[index]
 
     @property
     def files(self): return get_files(self.path, self.extension)

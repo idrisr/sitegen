@@ -44,7 +44,8 @@ def main():
     DIR = Path.home() / "idrisr.github.io"
     nbs = Notebooks(DIR / "_jupyter")
     posts = Posts(DIR / "_posts")
-    [convert_notebook(_) for _ in nbs - posts]
+    for _ in nbs - posts:
+        convert_notebook(nbs[_])
 
 
 if __name__ == '__main__':
